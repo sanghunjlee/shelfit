@@ -72,8 +72,18 @@ func (a *Author) Write(text string) (*Content, error) {
 
 	content.Title = strings.Join(title, " ")
 
-	if !content.HasStatus {
-		content.Status = append(content.Status, Unread)
+	if content.HasVolumes {
+		if len(content.VolumeTitles) > len(content.Status) {
+			start := len(content.Status)
+			end := len(content.VolumeTitles)
+			for i := start; i <= end; i++ {
+				if i == 0 {
+					content.Status = append(content.Status, Unread)
+				} else {
+					content.Status = append(content.Status, content.Status[0])
+				}
+			}
+		}
 	}
 
 	return content, nil
