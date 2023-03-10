@@ -10,35 +10,45 @@ type Author struct{}
 func (a *Author) Write(text string) (*Content, error) {
 	content := &Content{
 		HasArchived: false,
-		HasFinished: false,
+		HasCategory: false,
 		HasGenres:   false,
 		HasVolumes:  false,
 		HasStatus:   false,
 		HasLink:     false,
 	}
 
-	re_category, _ := regexp.Compile(`\@[\p{L}\d_-]+`)
-	re_genres, _ := regexp.Compile(`\![\p{L}\d_-]+`)
-
-	content.Category = a.matchWords(text, re_category)[0]
-	content.Genres = a.matchWords(text, re_genres)
-
+	var title []string
 	var re *regexp.Regexp
 
 	for _, word := range strings.Split(text, " ") {
 		match := false
-
+		// Check for Category (quantified by "@")
+		re, _ = regexp.Compile(`^\@[\p{L}\d_-]+`)
+		if re.MatchString(word) {
+			if !content.HasCategory {
+				content.HasCategory = true
+				content.Category = word[1:]
+			}
+			match = true
+		}
+		// Check for Genre (quantified by "!")
+		re, _ = regexp.Compile(`^\.[\p{L}\d_-]+`)
+		if re.MatchString(word) {
+			content.HasGenres = true
+			content.Genres = append(content.Genres, word[1:])
+			match = true
+		}
 		// Check for Volumes (quantified by "+")
 		re, _ = regexp.Compile(`^\+\p{L}*\d+.*$`)
 		if re.MatchString(word) {
 			content.HasVolumes = true
-			content.Volumes = append(content.Volumes, word)
+			content.VolumeTitles = append(content.VolumeTitles, word[1:])
 			match = true
 		}
 		// Check for Status (quantified by "-")
-		re, _ = regexp.Compile(`^\-\p{L}+.*$`)
+		re, _ = regexp.Compile(`^\!\p{L}+.*$`)
 		if re.MatchString(word) {
-			content.Status = append(content.Status, a.parseStatus(word))
+			content.Status = append(content.Status, a.parseStatus(word[1:]))
 			if content.HasVolumes {
 				if !content.HasStatus {
 					content.Status = append(content.Status, content.PrevStatus())
@@ -51,19 +61,26 @@ func (a *Author) Write(text string) (*Content, error) {
 			match = true
 		}
 
+		if !match {
+			title = append(title, word)
+		}
 	}
-}
 
-func (a *Author) matchWords(text string, re *regexp.Regexp) []string {
-	results := re.FindAllString(text, -1)
-	ret := []string{}
+	content.Title = strings.Join(title, " ")
 
-	for _, val := range results {
-		ret = append(ret, val[1:])
+	if !content.HasStatus {
+		content.Status = append(content.Status, Unread)
 	}
-	return ret
+
+	return content, nil
 }
 
 func (a *Author) parseStatus(text string) Status {
-
+	if contain(text, Finished.RelatedStrings()) {
+		return Finished
+	} else if contain(text, Started.RelatedStrings()) {
+		return Started
+	} else {
+		return Unread
+	}
 }
