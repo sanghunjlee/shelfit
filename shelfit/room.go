@@ -60,7 +60,7 @@ func (b *BedRoom) Save(books []*Book) {
 			book.UUID = newUUID()
 		}
 	}
-	data, _ := json.Marshal(books)
+	data, _ := json.MarshalIndent(books, "", "  ")
 	if err := os.WriteFile(ShelfFile, []byte(data), 0644); err != nil {
 		fmt.Println("Error: Failed writing json file..", err)
 	}
