@@ -1,6 +1,7 @@
 package shelfit
 
 import (
+	"errors"
 	"regexp"
 	"strings"
 )
@@ -8,6 +9,9 @@ import (
 type Author struct{}
 
 func (a *Author) Write(text string) (*Content, error) {
+	if len(strings.Replace(text, " ", "", -1)) == 0 {
+		return nil, errors.New("empty input: there is no args to parse from")
+	}
 	content := &Content{
 		HasArchived: false,
 		HasCategory: false,
