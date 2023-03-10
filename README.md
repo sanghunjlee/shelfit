@@ -19,5 +19,5 @@ Here are concepts that I wanted to focus the implemtation around:
 ### Examples
 
 ```bash
-> shelfit add chainsawman @manga !good +v1 -finished +v2 -unread
+> shelfit add chainsawman @manga .good +v1 !finished +v2 !unread
 ```
