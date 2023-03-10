@@ -27,6 +27,7 @@ func MakeBook(content *Content) (*Book, error) {
 		Volumes:  content.Volumes,
 		Status:   content.Status[0],
 	}
+	book.Cover = -1
 	currTime := timeStamp(time.Now()).Format(ISO8601)
 	switch book.Status {
 	case Unread:
