@@ -55,11 +55,11 @@ func (s *Shelf) getMaxId() int {
 }
 
 func (s *Shelf) getNextId() int {
-	var found bool
-	maxId := s.getMaxId()
-	if maxId == 0 {
+	if len(s.Books) == 0 {
 		return 0
 	}
+	var found bool
+	maxId := s.getMaxId()
 	for i := 0; i < maxId; i++ {
 		found = false
 		for _, book := range s.Books {
