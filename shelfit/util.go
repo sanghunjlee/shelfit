@@ -1,6 +1,7 @@
 package shelfit
 
 import (
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -19,6 +20,31 @@ func contain(val string, arr []string) bool {
 		}
 	}
 	return false
+}
+
+func ljust(s string, l int) string {
+	if l <= 0 {
+		return ""
+	}
+	if l < len(s) {
+		return string(s[:l])
+	} else {
+		return s + strings.Repeat(" ", l-len(s))
+	}
+}
+
+func correctFieldName(field string, anyStruct interface{}) (bool, string) {
+	val := reflect.ValueOf(anyStruct)
+	if val.Kind() == reflect.Ptr {
+		val = val.Elem()
+	}
+	for i := 0; i < val.NumField(); i++ {
+		fType := val.Type().Field(i)
+		if strings.EqualFold(field, fType.Name) {
+			return true, fType.Name
+		}
+	}
+	return false, field
 }
 
 func compareStrings(left string, right string) bool {
