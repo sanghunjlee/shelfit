@@ -14,13 +14,19 @@ import (
 var addCmd = &cobra.Command{
 	Use:     "add <book>",
 	Aliases: []string{"a"},
-	Short:   "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Example: `
+shelfit add @anime chainsawman .good .action !started
+shelfit add @manga dededede .favorite .drama +v1-v8 !finished`,
+	Short: "Adds books",
+	Long: `
+Adds books
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+There are four main key flags to describe the "book" that you want to add:
+'@': Category 
+'.': Genre - a tag to describe the book (applies to its subitems, volumes)
+'+': Volume - a sub-item that are related to the book
+'!': Status - [unread, started, finished] - describes the status of the book (or the volume)`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		shelfit.NewApp().AddBook(strings.Join(args, " "))
 	},
