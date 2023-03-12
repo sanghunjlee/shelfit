@@ -13,14 +13,16 @@ const (
 )
 
 type App struct {
-	Room  Room
-	Shelf *Shelf
+	Room    Room
+	Shelf   *Shelf
+	Printer Printer
 }
 
 func NewApp() *App {
 	app := &App{
-		Room:  NewBedRoom(),
-		Shelf: &Shelf{},
+		Room:    NewBedRoom(),
+		Shelf:   &Shelf{},
+		Printer: NewShellPrinter(),
 	}
 	return app
 }
@@ -30,12 +32,12 @@ func (a *App) Initialize() {
 	fmt.Println("Shelf initialized.")
 }
 
-func (a *App) AddBook(text string) {
+func (a *App) AddBook(input string) {
 	a.load()
 
 	author := &Author{}
 
-	content, err := author.Write(text)
+	content, err := author.Write(input)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -66,9 +68,9 @@ func (a *App) AddBook(text string) {
 	}
 }
 
-func (a *App) DeleteBook(text string) {
+func (a *App) DeleteBook(input string) {
 	a.load()
-	ids := a.getIds(text)
+	ids := a.getIds(input)
 	if len(ids) == 0 {
 		return
 	}
@@ -77,6 +79,25 @@ func (a *App) DeleteBook(text string) {
 	for _, id := range ids {
 		fmt.Printf("Book %d deleted.", id)
 	}
+}
+
+func (a *App) ClearBooks(input string) {
+	a.load()
+}
+
+func (a *App) ListBooks(input string, expand bool, groupBy string) {
+	a.load()
+
+	org := &Organizer{}
+
+	var neatShelf *NeatShelf
+
+	neatShelf, err := org.GroupBy(a.Shelf, expand, groupBy)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	a.Printer.Print(neatShelf)
 }
 
 func (a *App) load() error {
