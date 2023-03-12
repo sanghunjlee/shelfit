@@ -18,8 +18,8 @@ func (s *Shelf) Add(book *Book) int {
 
 func (s *Shelf) Delete(ids ...int) {
 	for _, id := range ids {
-		book, index := s.FindById(id)
-		if book == nil {
+		index := s.GetIndexById(id)
+		if index == -1 {
 			continue
 		}
 		s.Books = append(s.Books[:index], s.Books[index+1:]...)
@@ -35,13 +35,22 @@ func (s *Shelf) FindIdByTitle(title string) int {
 	return -1
 }
 
-func (s *Shelf) FindById(id int) (*Book, int) {
-	for index, book := range s.Books {
+func (s *Shelf) FindById(id int) *Book {
+	for _, book := range s.Books {
 		if book.Id == id {
-			return book, index
+			return book
 		}
 	}
-	return nil, -1
+	return nil
+}
+
+func (s *Shelf) GetIndexById(id int) int {
+	for index, b := range s.Books {
+		if b.Id == id {
+			return index
+		}
+	}
+	return -1
 }
 
 func (s *Shelf) getMaxId() int {
