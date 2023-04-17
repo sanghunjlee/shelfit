@@ -26,6 +26,10 @@ func (s *Shelf) Delete(ids ...int) {
 	}
 }
 
+func (s *Shelf) Clear() {
+	s.Books = nil
+}
+
 func (s *Shelf) FindIdByTitle(title string) int {
 	for _, b := range s.Books {
 		if compareStrings(title, b.Title) {

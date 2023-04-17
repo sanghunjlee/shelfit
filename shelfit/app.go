@@ -83,6 +83,8 @@ func (a *App) DeleteBook(input string) {
 
 func (a *App) ClearBooks(input string) {
 	a.load()
+	a.Shelf.Clear()
+	a.save()
 }
 
 func (a *App) ListBooks(input string, expand bool, groupBy string) {
