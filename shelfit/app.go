@@ -48,24 +48,11 @@ func (a *App) AddBook(input string) {
 		fmt.Println(err.Error())
 		return
 	}
-	volumes, err := MakeVolumes(content)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
 
-	var bookVolumes []int
-	bookId := a.Shelf.Add(book)
-	for _, v := range volumes {
-		v.Cover = bookId
-		vId := a.Shelf.Add(v)
-		bookVolumes = append(bookVolumes, vId)
-	}
-	book.Volumes = bookVolumes
+	a.Shelf.Add(book)
+
 	a.save()
 	fmt.Printf("Book %d added to the shelf.", book.Id)
-	for _, v := range bookVolumes {
-		fmt.Printf("Volume %d added to the shelf.", v)
-	}
 }
 
 func (a *App) DeleteBook(input string) {

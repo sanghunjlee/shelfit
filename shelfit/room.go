@@ -59,6 +59,11 @@ func (b *BedRoom) Save(books []*Book) {
 		if book.UUID == "" {
 			book.UUID = newUUID()
 		}
+		for _, volume := range book.Volumes {
+			if volume.UUID == "" {
+				volume.UUID = newUUID()
+			}
+		}
 	}
 	data, _ := json.MarshalIndent(books, "", "  ")
 	if err := os.WriteFile(ShelfFile, []byte(data), 0644); err != nil {

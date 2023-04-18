@@ -7,7 +7,6 @@ type Content struct {
 	Category     string
 	Genres       []string
 	Cover        int
-	Volumes      []int
 	VolumeTitles []string
 	Status       []Status
 	Link         []string

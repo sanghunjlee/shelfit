@@ -2,6 +2,7 @@ package shelfit
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -23,26 +24,28 @@ func (p *ShellPrinter) Print(neatShelf *NeatShelf) error {
 			if index == 0 {
 				p.AddQueue(mapKey)
 				p.AddQueue(
+					"Id",
 					"Title",
 					"Status",
 					"Category",
 					"Genres",
 				)
 			}
-			if book.Cover == -1 {
-				p.AddQueue(
-					book.Title,
-					book.Status.String(),
-					book.Category,
-					strings.Join(book.Genres, ", "),
-				)
-			} else {
-				p.AddQueue(
-					"  "+book.Title,
-					book.Status.String(),
-					book.Category,
-					strings.Join(book.Genres, ", "),
-				)
+			p.AddQueue(
+				strconv.Itoa(book.Id),
+				book.Title,
+				book.Status.String(),
+				book.Category,
+				strings.Join(book.Genres, ", "),
+			)
+			if book.Volumes != nil {
+				for _, volume := range book.Volumes {
+					p.AddQueue(
+						"+ v"+strconv.Itoa(volume.Id),
+						volume.Title,
+						volume.Status.String(),
+					)
+				}
 			}
 		}
 	}
