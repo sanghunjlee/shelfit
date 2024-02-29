@@ -61,13 +61,27 @@ func (a *App) DeleteBook(input string) {
 	a.load()
 	ids := a.getIds(input)
 	if len(ids) == 0 {
+		fmt.Println(fmt.Errorf("no item found"))
 		return
 	}
+	strIds := convertIntArrayToStringArr(ids)
 
-	a.Shelf.Delete(ids...)
-	a.save()
-	for _, id := range ids {
-		fmt.Printf("Book %d deleted.", id)
+	fmt.Printf("Deleting the following %d items:\n", len(ids))
+	a.ListBooks(strings.Join(strIds, ","), "")
+
+	fmt.Println("Continue deleting? [y/N]")
+	reader := bufio.NewReader(os.Stdin)
+	char, _, err := reader.ReadRune()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if char == 121 || char == 89 {
+		a.Shelf.Delete(ids...)
+		a.save()
+		for _, id := range ids {
+			fmt.Printf("Book %d deleted.\n", id)
+		}
 	}
 }
 
@@ -139,12 +153,21 @@ func (a *App) save() {
 }
 
 func (a *App) getIds(text string) (ids []int) {
+	var parsedIds []int
 	textFrags := strings.Split(text, ",")
 	for _, frag := range textFrags {
 		if rangeIds := parseRangeInt(frag); len(rangeIds) > 0 {
-			ids = append(ids, rangeIds...)
+			parsedIds = append(parsedIds, rangeIds...)
 		} else if id, err := strconv.Atoi(frag); err == nil {
-			ids = append(ids, id)
+			parsedIds = append(parsedIds, id)
+		}
+	}
+	for _, id := range parsedIds {
+		for _, b := range a.Shelf.Books {
+			if b.Id == id {
+				ids = append(ids, id)
+				break
+			}
 		}
 	}
 	return ids
