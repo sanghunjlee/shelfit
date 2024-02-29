@@ -33,6 +33,13 @@ func addPrefix(prefix string, arr []string) []string {
 	return newArr
 }
 
+func convertIntArrayToStringArr(arr []int) (strArr []string) {
+	for _, i := range arr {
+		strArr = append(strArr, strconv.Itoa(i))
+	}
+	return strArr
+}
+
 func ljust(s string, l int) string {
 	if l <= 0 {
 		return ""

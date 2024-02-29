@@ -50,3 +50,24 @@ func TestAddPrefix(t *testing.T) {
 	}
 
 }
+
+func TestConvertIntArrayToStringArr(t *testing.T) {
+	var (
+		test     []int
+		solution []string
+	)
+
+	test = []int{1, 123, 0, -2, -129}
+	solution = []string{"1", "123", "0", "-2", "-129"}
+
+	result := convertIntArrayToStringArr(test)
+
+	if len(result) != len(test) {
+		t.Errorf("length mismatch: test has length=%d but the result has length=%d", len(test), len(result))
+	}
+	for i, s := range result {
+		if s != solution[i] {
+			t.Errorf("mismatch at index %d: %s != %s", i, s, solution[i])
+		}
+	}
+}
