@@ -10,29 +10,36 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// variables for flags
+var (
+	note string
+)
+
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:     "add <book>",
+	Use:     "add <item>",
 	Aliases: []string{"a"},
 	Example: `
 shelfit add @anime chainsawman .good .action !started
 shelfit add @manga dededede .favorite .drama +v1-v8 !finished`,
-	Short: "Adds books",
+	Short: "Add an item to the shelf",
 	Long: `
-Adds books
+Add an item to the shelf
 
-There are four main key flags to describe the "book" that you want to add:
-'@': Category 
-'.': Genre - a tag to describe the book (applies to its subitems, volumes)
-'+': Volume - a sub-item that are related to the book
-'!': Status - [unread, started, finished] - describes the status of the book (or the volume)`,
+There are inline flags to describe the item that you want to add:
+'!': Category (required)
+'#': Tag
+`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		shelfit.NewApp().AddBook(strings.Join(args, " "))
+		shelfit.NewApp().AddBook(strings.Join(args, " "), note)
 	},
 }
 
 func init() {
+	noteFlagUsage := "Add a short note (Please encapsulate with \"\")\nUse [addNote] command for more detailed notes"
+
+	addCmd.Flags().StringVarP(&note, "note", "n", "", noteFlagUsage)
 	rootCmd.AddCommand(addCmd)
 
 	// Here you will define your flags and configuration settings.

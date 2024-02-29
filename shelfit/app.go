@@ -1,7 +1,9 @@
 package shelfit
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -32,12 +34,12 @@ func (a *App) Initialize() {
 	fmt.Println("Shelf initialized.")
 }
 
-func (a *App) AddBook(input string) {
+func (a *App) AddBook(input string, note string) {
 	a.load()
 
 	author := &Author{}
 
-	content, err := author.Write(input)
+	content, err := author.Write(input, note)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -70,8 +72,22 @@ func (a *App) DeleteBook(input string) {
 
 func (a *App) ClearBooks(input string) {
 	a.load()
-	a.Shelf.Clear()
-	a.save()
+
+	if len(a.Shelf.Books) > 0 {
+		fmt.Printf("Clear %d item? [y/N]", len(a.Shelf.Books))
+		reader := bufio.NewReader(os.Stdin)
+		char, _, err := reader.ReadRune()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		if char == 121 || char == 89 {
+			a.Shelf.Clear()
+			a.save()
+		}
+	} else {
+		fmt.Print("No items to clear")
+	}
 }
 
 func (a *App) ListBooks(input string, expand bool, groupBy string) {

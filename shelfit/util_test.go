@@ -30,3 +30,23 @@ func TestLjust(t *testing.T) {
 		t.Errorf(`ljust(%s, 0) != ""`, test)
 	}
 }
+
+func TestAddPrefix(t *testing.T) {
+	var (
+		test     []string
+		prefixes []string
+		result   []string
+	)
+	test = []string{"hello", "world"}
+	prefixes = []string{"hello", " ", "#", ""}
+
+	for _, pf := range prefixes {
+		result = addPrefix(pf, test)
+		for i, v := range result {
+			if v != pf+test[i] {
+				t.Errorf("mismatch at index %d: %s != %s", i, v, pf+test[i])
+			}
+		}
+	}
+
+}

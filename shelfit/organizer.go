@@ -31,9 +31,6 @@ func (o *Organizer) GroupBy(shelf *Shelf, expand bool, groupBy string) (*NeatShe
 				key = keyValue.String()
 			}
 		}
-		if !expand {
-			b.Volumes = nil
-		}
 		groupedBooks[key] = append(groupedBooks[key], b)
 	}
 

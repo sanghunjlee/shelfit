@@ -26,27 +26,16 @@ func (p *ShellPrinter) Print(neatShelf *NeatShelf) error {
 				p.AddQueue(
 					"Id",
 					"Title",
-					"Status",
 					"Category",
-					"Genres",
+					"Tags",
 				)
 			}
 			p.AddQueue(
 				strconv.Itoa(book.Id),
 				book.Title,
-				book.Status.String(),
 				book.Category,
-				strings.Join(book.Genres, ", "),
+				strings.Join(addPrefix("#", book.Tags), " "),
 			)
-			if book.Volumes != nil {
-				for _, volume := range book.Volumes {
-					p.AddQueue(
-						"+ v"+strconv.Itoa(volume.Id),
-						volume.Title,
-						volume.Status.String(),
-					)
-				}
-			}
 		}
 	}
 	p.PrintQueue()

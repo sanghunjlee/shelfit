@@ -4,25 +4,16 @@ type Content struct {
 	Title    string
 	Archived bool
 
-	Category     string
-	Genres       []string
-	Cover        int
-	VolumeTitles []string
-	Status       []Status
-	Link         []string
+	Category string
+	Tags     []string
+	Note     string
+	Link     []string
 
 	HasArchived bool
 
 	HasCategory bool
-	HasGenres   bool
+	HasTag      bool
 	HasVolumes  bool
 	HasStatus   bool
 	HasLink     bool
-}
-
-func (c *Content) PrevStatus() Status {
-	if len(c.Status) == 0 {
-		return Unset
-	}
-	return c.Status[len(c.Status)-1]
 }

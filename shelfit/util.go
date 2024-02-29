@@ -22,6 +22,17 @@ func contain(val string, arr []string) bool {
 	return false
 }
 
+func addPrefix(prefix string, arr []string) []string {
+	if prefix == "" {
+		return arr
+	}
+	var newArr []string
+	for _, v := range arr {
+		newArr = append(newArr, prefix+v)
+	}
+	return newArr
+}
+
 func ljust(s string, l int) string {
 	if l <= 0 {
 		return ""
