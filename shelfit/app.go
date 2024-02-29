@@ -90,14 +90,14 @@ func (a *App) ClearBooks(input string) {
 	}
 }
 
-func (a *App) ListBooks(input string, expand bool, groupBy string) {
+func (a *App) ListBooks(input string, category string) {
 	a.load()
 
 	org := &Organizer{}
 
 	var neatShelf *NeatShelf
 
-	neatShelf, err := org.GroupBy(a.Shelf, expand, groupBy)
+	neatShelf, err := org.GroupBy(a.Shelf, category)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

@@ -11,31 +11,26 @@ import (
 )
 
 var (
-	expand  bool
-	groupBy string
+	category string
 )
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:     "list",
 	Aliases: []string{"l", "ls"},
-	Short:   "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short:   "list books",
+	Long: `
+list books in the shelf
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		shelfit.NewApp().ListBooks(strings.Join(args, " "), expand, groupBy)
+		shelfit.NewApp().ListBooks(strings.Join(args, " "), category)
 	},
 }
 
 func init() {
+	listCmd.Flags().StringVarP(&category, "category", "c", "", "Filter by category")
 	rootCmd.AddCommand(listCmd)
 
-	listCmd.Flags().BoolVarP(&expand, "expand", "e", false, "Expand the list to include volumes (if exist)")
-	listCmd.Flags().StringVarP(&groupBy, "groupBy", "g", "", "Group books and list accordingly")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

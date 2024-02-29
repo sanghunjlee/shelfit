@@ -2,7 +2,7 @@ package shelfit
 
 import (
 	"errors"
-	"reflect"
+	"fmt"
 )
 
 type Organizer struct{}
@@ -11,28 +11,29 @@ type NeatShelf struct {
 	Books map[string][]*Book
 }
 
-func (o *Organizer) GroupBy(shelf *Shelf, expand bool, groupBy string) (*NeatShelf, error) {
+func (o *Organizer) GroupBy(shelf *Shelf, category string) (*NeatShelf, error) {
 	groupedBooks := map[string][]*Book{}
-	var key string = ""
-	var err error = nil
+	var categoryExist bool = false
+	var bookKey string
 
-	_, groupBy = correctFieldName(groupBy, Book{})
-
-	for _, b := range shelf.Books {
-		switch groupBy {
-		case "", "All", "all", "Any", "any":
-			key = ""
-		default:
-			keyValue := reflect.ValueOf(b).Elem().FieldByName(groupBy)
-			if keyValue == (reflect.Value{}) {
-				err = errors.New("The groupBy keyword " + groupBy + " is not a field")
-				key = ""
-			} else {
-				key = keyValue.String()
-			}
-		}
-		groupedBooks[key] = append(groupedBooks[key], b)
+	if len(shelf.Books) == 0 {
+		return &NeatShelf{}, errors.New("empty shelf: there is no item to list")
 	}
 
-	return &NeatShelf{Books: groupedBooks}, err
+	for _, b := range shelf.Books {
+		if category == "" || category == b.Category {
+			categoryExist = true
+			bookKey = b.Category
+			if category == "" {
+				bookKey = ""
+			}
+			groupedBooks[bookKey] = append(groupedBooks[bookKey], b)
+		}
+	}
+
+	if !categoryExist {
+		return &NeatShelf{}, fmt.Errorf("no category: there is no item with %s category", category)
+	}
+
+	return &NeatShelf{Books: groupedBooks}, nil
 }

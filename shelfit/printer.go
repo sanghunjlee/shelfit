@@ -22,7 +22,9 @@ func (p *ShellPrinter) Print(neatShelf *NeatShelf) error {
 	for mapKey, neatBooks := range neatShelf.Books {
 		for index, book := range neatBooks {
 			if index == 0 {
-				p.AddQueue(mapKey)
+				if mapKey != "" {
+					p.AddQueue(fmt.Sprintf("**%s**", strings.ToUpper(mapKey)))
+				}
 				p.AddQueue(
 					"Id",
 					"Title",
