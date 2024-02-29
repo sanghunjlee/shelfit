@@ -63,6 +63,7 @@ func (a *App) DeleteBook(input string) {
 	if len(ids) == 0 {
 		return
 	}
+
 	a.Shelf.Delete(ids...)
 	a.save()
 	for _, id := range ids {
@@ -91,13 +92,32 @@ func (a *App) ClearBooks(input string) {
 }
 
 func (a *App) ListBooks(input string, category string) {
+	var (
+		neatShelf *NeatShelf
+		books     []*Book
+	)
+
 	a.load()
 
 	org := &Organizer{}
+	ids := a.getIds(input)
 
-	var neatShelf *NeatShelf
+	if len(ids) > 0 {
+		books = make([]*Book, 0)
 
-	neatShelf, err := org.GroupBy(a.Shelf, category)
+		for _, b := range a.Shelf.Books {
+			for _, id := range ids {
+				if id == b.Id {
+					books = append(books, b)
+					break
+				}
+			}
+		}
+	} else {
+		books = a.Shelf.Books
+	}
+
+	neatShelf, err := org.GroupBy(books, category)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

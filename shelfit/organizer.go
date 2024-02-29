@@ -11,16 +11,16 @@ type NeatShelf struct {
 	Books map[string][]*Book
 }
 
-func (o *Organizer) GroupBy(shelf *Shelf, category string) (*NeatShelf, error) {
+func (o *Organizer) GroupBy(books []*Book, category string) (*NeatShelf, error) {
 	groupedBooks := map[string][]*Book{}
 	var categoryExist bool = false
 	var bookKey string
 
-	if len(shelf.Books) == 0 {
+	if len(books) == 0 {
 		return &NeatShelf{}, errors.New("empty shelf: there is no item to list")
 	}
 
-	for _, b := range shelf.Books {
+	for _, b := range books {
 		if category == "" || category == b.Category {
 			categoryExist = true
 			bookKey = b.Category

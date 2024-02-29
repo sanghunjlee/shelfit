@@ -16,11 +16,19 @@ var (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:     "list",
+	Use:     "list <index(s)>",
 	Aliases: []string{"l", "ls"},
 	Short:   "list books",
 	Long: `
 list books in the shelf
+
+When listing specific index or indices, use the delimiter: ","
+When indicating a range of indices, use a dash: "-"
+	`,
+	Example: `
+shelfit list --category foo // list all the items with "foo" category
+shelfit list 0,2,4 // list items with id = 0, 2, or 4
+shelfit list 3-7 // list items with id ranging from 3 to 7 (both ends included)
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		shelfit.NewApp().ListBooks(strings.Join(args, " "), category)
@@ -28,6 +36,7 @@ list books in the shelf
 }
 
 func init() {
+
 	listCmd.Flags().StringVarP(&category, "category", "c", "", "Filter by category")
 	rootCmd.AddCommand(listCmd)
 
