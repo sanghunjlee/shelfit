@@ -66,7 +66,7 @@ func (a *App) DeleteBook(input string) {
 	}
 	strIds := convertIntArrayToStringArr(ids)
 
-	fmt.Printf("Deleting the following %d items:\n", len(ids))
+	fmt.Printf("This will delete the following %d items:\n", len(ids))
 	a.ListBooks(strings.Join(strIds, ","), "")
 
 	fmt.Println("Continue deleting? [y/N]")
