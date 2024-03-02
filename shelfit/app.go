@@ -63,17 +63,62 @@ func (a *App) AddBook(input string, note string) {
 func (a *App) EditBook(input string) {
 	a.load()
 
-	_, err := a.getId(input)
+	id, err := a.getId(input)
+	book := a.Shelf.FindById(id)
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	value, err := window.Prompt("Edit Book:", "")
+	options := []string{
+		"Title",
+		"Category",
+		"Tags",
+	}
 
-	fmt.Println(value)
+	selection, err := window.Select(options)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
+	var (
+		oldValue string
+		value    string
+	)
+
+	// r := reflect.ValueOf(book)
+	// f := reflect.Indirect(r).FieldByName(selection)
+	// oldValue = f.String()
+
+	switch selection {
+	case options[0]: // Title
+		oldValue = book.Title
+		value, err = window.Prompt(fmt.Sprintf("Enter a new value for \"%s\"", selection), oldValue)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		book.Title = value
+	case options[1]: // Category
+		oldValue = book.Category
+		value, err = window.Prompt(fmt.Sprintf("Enter a new value for \"%s\"", selection), oldValue)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		book.Category = value
+	case options[2]: // Tags
+
+		break
+	default:
+		fmt.Println(fmt.Errorf("selection issue: %s is not an option", selection))
+		return
+	}
+
+	a.save()
+	fmt.Printf("Item (Id=%d) value changed for \"%s\":\n\tOld: %s\n\tNew: %s", book.Id, selection, oldValue, value)
 }
 
 func (a *App) DeleteBook(input string) {
