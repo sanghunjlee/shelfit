@@ -35,7 +35,7 @@ There are two qualifiers that can be used:
     - This quantifier is required
     - If you try to input multiple categories, only the first category will be registered.
 
-2. `#` - Tag(s)
+2. `.` - Tag(s)
 
 > [!NOTE]
 > The qualifier can only be used a continuous string (no space). Please use dash(s) (`-`) or underscore(s) (`_`) to input multi-words qualifier(s)
