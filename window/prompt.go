@@ -9,8 +9,8 @@ import (
 
 type promptModel struct {
 	label     string
-	value     string
 	textInput textinput.Model
+	quitting  bool
 	err       error
 }
 
@@ -23,7 +23,6 @@ func Prompt(label string, placeholder string) (string, error) {
 
 	pm := promptModel{
 		label:     label,
-		value:     "",
 		textInput: ti,
 		err:       nil,
 	}
@@ -31,7 +30,7 @@ func Prompt(label string, placeholder string) (string, error) {
 	p := tea.NewProgram(pm)
 	m, err := p.Run()
 
-	return m.textInput.Value(), err
+	return m.View(), err
 }
 
 func (m promptModel) Init() tea.Cmd {
@@ -45,6 +44,7 @@ func (m promptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.Type {
 		case tea.KeyEnter, tea.KeyCtrlC, tea.KeyEsc:
+			m.quitting = true
 			return m, tea.Quit
 		}
 
@@ -59,6 +59,9 @@ func (m promptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m promptModel) View() string {
+	if m.quitting {
+		return m.textInput.Value()
+	}
 	return fmt.Sprintf(
 		"%s\n\n%s\n\n%s",
 		m.label,
