@@ -20,15 +20,15 @@ var addCmd = &cobra.Command{
 	Use:     "add <item>",
 	Aliases: []string{"a"},
 	Example: `
-shelfit add @anime chainsawman .good .action !started
-shelfit add @manga dededede .favorite .drama +v1-v8 !finished`,
+shelfit add chainsawman !anime .good .action
+shelfit add dededede !manga .favorite .drama`,
 	Short: "Add an item to the shelf",
 	Long: `
 Add an item to the shelf
 
 There are inline flags to describe the item that you want to add:
 '!': Category (required)
-'#': Tag
+'.': Tag
 `,
 
 	Run: func(cmd *cobra.Command, args []string) {
