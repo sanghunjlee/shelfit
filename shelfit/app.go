@@ -94,24 +94,32 @@ func (a *App) EditBook(input string) {
 
 	switch selection {
 	case options[0]: // Title
-		oldValue = book.Title
-		value, err = window.Prompt(fmt.Sprintf("Enter a new value for \"%s\"", selection), oldValue)
+		ex := book.Title
+		value, err = window.Prompt(fmt.Sprintf("Enter a new value for \"%s\"", selection), ex)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
+		oldValue = ex
 		book.Title = value
 	case options[1]: // Category
-		oldValue = book.Category
-		value, err = window.Prompt(fmt.Sprintf("Enter a new value for \"%s\"", selection), oldValue)
+		ex := book.Category
+		value, err = window.Prompt(fmt.Sprintf("Enter a new value for \"%s\"", selection), ex)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
+		oldValue = ex
 		book.Category = value
 	case options[2]: // Tags
-
-		break
+		ex := book.Tags
+		value, err = window.TagInput(ex)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		oldValue = strings.Join(ex, " ")
+		book.Tags = strings.Split(value, " ")
 	default:
 		fmt.Println(fmt.Errorf("selection issue: %s is not an option", selection))
 		return
