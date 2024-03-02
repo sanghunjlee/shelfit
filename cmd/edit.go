@@ -4,8 +4,9 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"strings"
 
+	"github.com/sanghunjlee/shelfit/shelfit"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,7 @@ There are four main key flags to describe the "book" that you want to add:
 '+': Volume - a sub-item that are related to the book
 '!': Status - [unread, started, finished] - describes the status of the book (or the volume)`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("edit called")
+		shelfit.NewApp().EditBook(strings.Join(args, " "))
 	},
 }
 

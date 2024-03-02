@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/sanghunjlee/shelfit/window"
 )
 
 const (
@@ -18,6 +20,7 @@ type App struct {
 	Room    Room
 	Shelf   *Shelf
 	Printer Printer
+	Window  Window
 }
 
 func NewApp() *App {
@@ -55,6 +58,22 @@ func (a *App) AddBook(input string, note string) {
 
 	a.save()
 	fmt.Printf("Book %d added to the shelf.", book.Id)
+}
+
+func (a *App) EditBook(input string) {
+	a.load()
+
+	_, err := a.getId(input)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	value, err := window.Prompt("Edit Book:", "")
+
+	fmt.Println(value)
+
 }
 
 func (a *App) DeleteBook(input string) {
@@ -150,6 +169,21 @@ func (a *App) load() error {
 
 func (a *App) save() {
 	a.Room.Save(a.Shelf.Books)
+}
+
+func (a *App) getId(text string) (id int, err error) {
+	id, err = strconv.Atoi(text)
+	if err != nil {
+		return -1, err
+	}
+
+	for _, b := range a.Shelf.Books {
+		if b.Id == id {
+			return id, nil
+		}
+	}
+
+	return id, fmt.Errorf("no item found: there is no item with id: %d", id)
 }
 
 func (a *App) getIds(text string) (ids []int) {
