@@ -26,7 +26,7 @@ func (a *Author) Write(text string, note string) (*Content, error) {
 
 	for _, word := range strings.Split(text, " ") {
 		match := false
-		// Check for Category (quantified by "!")
+		// Check for Category (qualified by `!`)
 		re, _ = regexp.Compile(`^\![\p{L}\d_-]+`)
 		if re.MatchString(word) {
 			if !content.HasCategory {
@@ -37,8 +37,8 @@ func (a *Author) Write(text string, note string) (*Content, error) {
 			}
 			match = true
 		}
-		// Check for Tag (quantified by "#")
-		re, _ = regexp.Compile(`^\#[\p{L}\d_-]+`)
+		// Check for Tag (qualified by `.`)
+		re, _ = regexp.Compile(`^\.[\p{L}\d_-]+`)
 		if re.MatchString(word) {
 			content.HasTag = true
 			content.Tags = append(content.Tags, word[1:])
