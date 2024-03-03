@@ -17,25 +17,51 @@ Here are concepts that I wanted to focus the implemtation around:
 
 
 ## How to use
-#### Initializing the shelf
+### Initializing the *Shelf*
 First, you have to initialize the *shelf*.
 ```bash
 > shelfit init
 ```
 
-This will create the `shelf.json` file where all the data will be stored.
+This will create the `shelf.json` file where all the data will be stored. If `shelf.json` file already exists, the command will do nothing.
 
-#### Adding books
-Add a *book* with a command `shelfit add`, and details of the book.
+### Adding Items
+Add an item with a command `shelfit add <item>`. `<item>` is consisted of the *title* of the item (simple description of the item) and *qualifiers* of the item.
 
-You can describe the book with the tags: `@category`, `.genre`, and/or `!status`. These tags should only be one-word-long. The `.genre` tag can be repeated to add more genres to the detail.
+There are two qualifiers that can be used:
 
-You can also expand the book into *volumes* by using the tag `+subitem`. The plus symbole (`+`) will trigger the parser to recognize everything there after (until another `+` or the end of the line is reached) as a sub-item. Each subitem can be described with the `!status` tag.
+1. `!` - Category (**required**)
+ 
+    - This quantifier is required
+    - If you try to input multiple categories, only the first category will be registered.
 
-###### Examples
+2. `.` - Tag(s)
 
-```bash
-> shelfit add Chainsaw Man @manga .good +v1 !finished +v2 !unread
-> shelfit add @book The Lord of the Ring !finished +The Fellowship of the Ring +The Two Towers +The Return of the King
-> shelfit add @movie Drive My Car .favorite .japanese .murakami !finished
+> [!NOTE]
+> The qualifier can only be used a continuous string (no space). Please use dash(s) (`-`) or underscore(s) (`_`) to input multi-words qualifier(s)
+
+**Examples**
+
+```go
+
+> shelfit add The Lord of the Ring !book .fantasy .fiction
+
+// you can use `-` or `_` to make a multi-word qualifier
+> shelfit add Apples (3) !grocery-list .vons .fruits_veggies
+
+// you can use `--note` or `-n` flag to add a one-line note
+// encapsulated in quotes
+> shelfit add Chainsaw Man !manga .good_stuff --note "Written by the same author as Fire Punch"
 ```
+
+### Listing Items
+
+### Editting an Item
+
+### Deleting Item(s)
+
+### Clearing Items
+
+## How to Contribute
+
+Please refer to TODO.md for list of features to add
